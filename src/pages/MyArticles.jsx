@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { imageUpload } from "../api/utils";
+import { Link } from "react-router";
 
 const MyArticles = () => {
   const { user } = useContext(AuthContext);
@@ -270,13 +271,13 @@ const MyArticles = () => {
                     <td>{article.viewCount || 0}</td>
                     <td className="flex gap-2">
 
-                     
+                     <Link to={`/article/${article._id}`}>
                       <button
                         className="btn btn-sm btn-info"
-                        onClick={() => openDetailsModal(article)}
+                        // onClick={() => openDetailsModal(article)}
                       >
                         Details
-                      </button>
+                      </button></Link>
                       <button
                         className="btn btn-sm btn-warning"
                         onClick={() => openEditModal(article)}

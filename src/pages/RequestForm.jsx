@@ -15,7 +15,7 @@ const PublisherRequestForm = () => {
     const checkRequestStatus = async () => {
       try {
         const token = await user.getIdToken();
-        const res = await axios.get("http://localhost:3000/publisher-request/check", {
+        const res = await axios.get("https://a12-server-side-one.vercel.app/publisher-request/check", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,7 +48,7 @@ const PublisherRequestForm = () => {
     try {
       const token = await user.getIdToken();
       const res = await axios.post(
-        "http://localhost:3000/publisher-request",
+        "https://a12-server-side-one.vercel.app/publisher-request",
         { name, logo, reason },
         { headers: { Authorization: `Bearer ${token}` } }
       );
