@@ -1,4 +1,3 @@
-
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Chart } from "react-google-charts";
@@ -6,6 +5,7 @@ import { toast } from "react-toastify";
 
 const DashboardOverview = () => {
   const queryClient = useQueryClient();
+
   const { data: stats = {} } = useQuery({
     queryKey: ["stats"],
     queryFn: async () => {
@@ -18,11 +18,11 @@ const DashboardOverview = () => {
     queryKey: ["admin-articles"],
     queryFn: async () => {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/articles`);
-      return res.data;
+      // Safely return the articles array
+      return Array.isArray(res.data) ? res.data : res.data.articles || [];
     },
   });
 
- 
   const publisherStats = {};
   articles.forEach(article => {
     const publisher = article.publisher || "Unknown";
@@ -31,28 +31,27 @@ const DashboardOverview = () => {
 
   const pieChartData = [
     ["Publisher", "Articles"],
-    ...Object.entries(publisherStats)
+    ...Object.entries(publisherStats),
   ];
 
   const userStats = [
     ["Type", "Count"],
     ["Total Users", stats.total || 0],
     ["Premium Users", stats.premium || 0],
-    ["Normal Users", (stats.total || 0) - (stats.premium || 0)]
+    ["Normal Users", (stats.total || 0) - (stats.premium || 0)],
   ];
 
   const articleStatusStats = [
     ["Status", "Count"],
     ["Approved", articles.filter(a => a.status === "approved").length],
     ["Pending", articles.filter(a => a.status === "pending").length],
-    ["Declined", articles.filter(a => a.status === "declined").length]
+    ["Declined", articles.filter(a => a.status === "declined").length],
   ];
 
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">Dashboard Overview</h1>
 
-    
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="stats bg-primary text-primary-content shadow">
           <div className="stat">
@@ -74,7 +73,6 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-     
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="card bg-base-100 shadow">
           <div className="card-body">
@@ -82,11 +80,11 @@ const DashboardOverview = () => {
             <Chart
               chartType="PieChart"
               data={pieChartData}
-              options={{ 
+              options={{
                 is3D: true,
                 pieSliceText: "value",
                 backgroundColor: "transparent",
-                legend: { position: "right" }
+                legend: { position: "right" },
               }}
               width="100%"
               height="400px"
@@ -99,11 +97,11 @@ const DashboardOverview = () => {
             <Chart
               chartType="PieChart"
               data={userStats}
-              options={{ 
+              options={{
                 is3D: true,
                 pieSliceText: "value",
                 backgroundColor: "transparent",
-                legend: { position: "right" }
+                legend: { position: "right" },
               }}
               width="100%"
               height="400px"
@@ -112,7 +110,6 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-  
       <div className="card bg-base-100 shadow mb-8">
         <div className="card-body">
           <h2 className="card-title">Article Status</h2>
@@ -124,7 +121,7 @@ const DashboardOverview = () => {
               hAxis: { title: "Count" },
               vAxis: { title: "Status" },
               backgroundColor: "transparent",
-              legend: { position: "none" }
+              legend: { position: "none" },
             }}
             width="100%"
             height="400px"

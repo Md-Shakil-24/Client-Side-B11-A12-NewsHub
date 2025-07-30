@@ -7,16 +7,29 @@ import { Helmet } from "react-helmet";
 
 const AllArticleAdmin = () => {
   const queryClient = useQueryClient();
-  const [articlesState, setArticlesState] = useState([]); 
+  const [page, setPage] = useState(1);
+  const limit = 5;
 
-  const { data: articles = [] } = useQuery({
-    queryKey: ["admin-articles"],
+  const { data = {}, isLoading } = useQuery({
+    queryKey: ["admin-articles", page],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/articles`);
-      setArticlesState(res.data); 
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/admin/articles?page=${page}&limit=${limit}`
+      );
       return res.data;
     },
+    keepPreviousData: true,
   });
+
+  const articlesState = data.articles || [];
+  const total = data.total || 0;
+  const totalPages = Math.ceil(total / limit);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
 
   const handleDeclineArticle = async (id) => {
     const { value: reason } = await Swal.fire({
@@ -32,7 +45,9 @@ const AllArticleAdmin = () => {
 
     if (reason) {
       try {
-        await axios.patch(`${import.meta.env.VITE_API_URL}/admin/articles/decline/${id}`, { reason });
+        await axios.patch(`${import.meta.env.VITE_API_URL}/admin/articles/decline/${id}`, {
+          reason,
+        });
         toast.success("Article declined");
         queryClient.invalidateQueries(["admin-articles"]);
       } catch (error) {
@@ -42,27 +57,34 @@ const AllArticleAdmin = () => {
   };
 
   const handleMakePremium = async (id, currentStatus) => {
-    
-    setArticlesState((prev) =>
-      prev.map((article) =>
-        article._id === id ? { ...article, isPremium: !currentStatus } : article
-      )
-    );
+    // Optimistically update UI first
+    queryClient.setQueryData(["admin-articles", page], (oldData) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        articles: oldData.articles.map((article) =>
+          article._id === id ? { ...article, isPremium: !currentStatus } : article
+        ),
+      };
+    });
 
     try {
       await axios.patch(`${import.meta.env.VITE_API_URL}/admin/articles/premium/${id}`, {
         isPremium: !currentStatus,
       });
       toast.success("Premium status updated");
-      queryClient.invalidateQueries(["admin-articles"]);
     } catch (error) {
+      // Rollback if error
+      queryClient.setQueryData(["admin-articles", page], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          articles: oldData.articles.map((article) =>
+            article._id === id ? { ...article, isPremium: currentStatus } : article
+          ),
+        };
+      });
       toast.error("Failed to update premium status");
-      
-      setArticlesState((prev) =>
-        prev.map((article) =>
-          article._id === id ? { ...article, isPremium: currentStatus } : article
-        )
-      );
     }
   };
 
@@ -88,17 +110,15 @@ const AllArticleAdmin = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-8">Articles Management</h1>
-
-
-<Helmet>
+      <Helmet>
         <title>All-Articles | admin | NewsHub</title>
-        <meta name="description" content="Create an account for NewsHub." />
+        <meta name="description" content="Manage all submitted articles." />
       </Helmet>
 
+      <h1 className="text-3xl font-bold mb-8">Articles Management</h1>
 
       <div className="bg-base-100 p-4 rounded-lg shadow mb-8">
-        <h2 className="text-xl font-bold mb-4">All Articles ({articles.length})</h2>
+        <h2 className="text-xl font-bold mb-4">All Articles ({total})</h2>
         <div className="overflow-x-auto">
           <table className="table w-full">
             <thead>
@@ -119,11 +139,15 @@ const AllArticleAdmin = () => {
                   <td>{article.authorEmail}</td>
                   <td>{article.publisher || "N/A"}</td>
                   <td>
-                    <span className={`badge ${
-                      article.status === "approved" ? "badge-success" :
-                      article.status === "declined" ? "badge-error" :
-                      "badge-warning"
-                    }`}>
+                    <span
+                      className={`badge ${
+                        article.status === "approved"
+                          ? "badge-success"
+                          : article.status === "declined"
+                          ? "badge-error"
+                          : "badge-warning"
+                      }`}
+                    >
                       {article.status}
                     </span>
                     {article.status === "declined" && article.declineReason && (
@@ -141,18 +165,51 @@ const AllArticleAdmin = () => {
                     />
                   </td>
                   <td>{article.viewCount || 0}</td>
-                  <td>
+                  <td className="flex flex-col gap-1">
                     <button
                       className="btn btn-xs btn-error"
                       onClick={() => handleDeleteArticle(article._id)}
                     >
                       Delete
                     </button>
+                    <button
+                      className="btn btn-xs btn-warning"
+                      onClick={() => handleDeclineArticle(article._id)}
+                    >
+                      Decline
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          <div className="flex justify-center mt-4 gap-2">
+            <button
+              className="btn btn-sm"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+            {[...Array(totalPages).keys()].map((num) => (
+              <button
+                key={num}
+                onClick={() => handlePageChange(num + 1)}
+                className={`btn btn-sm ${page === num + 1 ? "btn-active" : ""}`}
+              >
+                {num + 1}
+              </button>
+            ))}
+            <button
+              className="btn btn-sm"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </>

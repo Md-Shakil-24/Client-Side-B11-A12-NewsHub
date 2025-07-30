@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { AuthContext } from "../provider/AuthProvider";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet";
 
 const AllArticles = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); 
   const [selectedPublisher, setSelectedPublisher] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [tags, setTags] = useState([]);
@@ -43,13 +44,13 @@ const AllArticles = () => {
       "articles",
       selectedPublisher?.value || "",
       selectedTag?.value || "",
-      searchTerm,
+      searchQuery,
     ],
     queryFn: async () => {
       const params = {};
       if (selectedPublisher?.value) params.publisher = selectedPublisher.value;
       if (selectedTag?.value) params.tag = selectedTag.value;
-      if (searchTerm) params.search = searchTerm;
+      if (searchQuery) params.search = searchQuery;
 
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
         params,
@@ -59,7 +60,7 @@ const AllArticles = () => {
     keepPreviousData: true,
   });
 
- 
+  
   useEffect(() => {
     if (articles.length > 0) {
       const allTags = articles.flatMap((article) => article.tags || []);
@@ -78,6 +79,7 @@ const AllArticles = () => {
     (article) => article.status === "approved"
   );
 
+ 
   const handlePublisherChange = (selectedOption) => {
     setSelectedPublisher(selectedOption);
   };
@@ -86,12 +88,20 @@ const AllArticles = () => {
     setSelectedTag(selectedOption);
   };
 
+ 
+  const handleSearch = () => {
+    setSearchQuery(searchTerm.trim());
+  };
+
+  
   const clearFilters = () => {
     setSearchTerm("");
+    setSearchQuery("");
     setSelectedPublisher(null);
     setSelectedTag(null);
   };
 
+ 
   const handleReadMore = (article) => {
     if (article.isPremium && !isPremiumUser) {
       toast.error(
@@ -118,20 +128,13 @@ const AllArticles = () => {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-
-
-
-
-
       <div className="max-w-[1470px] mx-auto">
+        <Helmet>
+          <title>All-Articles | NewsHub</title>
+          <meta name="description" content="Learn more about MyApp and what we do." />
+          <meta property="og:title" content="About Us - MyApp" />
+        </Helmet>
 
-
-         <Helmet>
-        <title>All-Articles | NewsHub</title>
-        <meta name="description" content="Learn more about MyApp and what we do." />
-        <meta property="og:title" content="About Us - MyApp" />
-      </Helmet>
-    
         <div className="text-center mb-10">
           <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
             Browse All Articles
@@ -141,11 +144,9 @@ const AllArticles = () => {
           </p>
         </div>
 
-     
-       
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
+           
             <div>
               <label
                 htmlFor="search"
@@ -153,30 +154,39 @@ const AllArticles = () => {
               >
                 Search Articles
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaSearch className="text-gray-400" />
-                </div>
+              <div className="flex">
                 <input
                   type="text"
                   id="search"
                   placeholder="Search by title..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSearch();
+                  }}
                 />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm("")}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  >
-                    <FaTimes className="text-gray-400 hover:text-gray-600" />
-                  </button>
-                )}
+                <button
+                  onClick={handleSearch}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-r-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <FaSearch />
+                </button>
               </div>
+              {searchTerm && (
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSearchQuery("");
+                  }}
+                  className="mt-1 text-sm text-gray-500 hover:text-gray-700"
+                >
+                  Clear Search
+                </button>
+              )}
             </div>
 
-         
+          
             <div>
               <label
                 htmlFor="publisher"
@@ -195,7 +205,7 @@ const AllArticles = () => {
               />
             </div>
 
-          
+           
             <div>
               <label
                 htmlFor="tags"
@@ -215,8 +225,7 @@ const AllArticles = () => {
             </div>
           </div>
 
-         
-          {(searchTerm || selectedPublisher || selectedTag) && (
+          {(searchQuery || selectedPublisher || selectedTag) && (
             <div className="mt-4 flex justify-end">
               <button
                 onClick={clearFilters}
@@ -228,7 +237,6 @@ const AllArticles = () => {
           )}
         </div>
 
-     
         <div className="flex justify-between items-center mb-6">
           <span className="text-sm text-gray-600">
             Showing <span className="font-medium">{filteredArticles.length}</span>{" "}
@@ -239,7 +247,6 @@ const AllArticles = () => {
           </span>
         </div>
 
-      
         {filteredArticles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredArticles.map((article) => (
@@ -320,7 +327,7 @@ const AllArticles = () => {
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">No articles found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm || selectedPublisher || selectedTag
+              {searchQuery || selectedPublisher || selectedTag
                 ? "Try adjusting your search or filter to find what you are looking for."
                 : "There are currently no articles available."}
             </p>
@@ -329,7 +336,7 @@ const AllArticles = () => {
                 onClick={clearFilters}
                 className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                {searchTerm || selectedPublisher || selectedTag ? "Clear All Filters" : "Refresh Page"}
+                {searchQuery || selectedPublisher || selectedTag ? "Clear All Filters" : "Refresh Page"}
               </button>
             </div>
           </div>
