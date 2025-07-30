@@ -6,11 +6,11 @@ const PublisherCard = ({ publisher }) => {
     <Link to={`/all-articles?publisher=${encodeURIComponent(publisher.name)}`}>
       <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
 
- <Helmet>
+ {/* <Helmet>
               <title>PublisherCards | NewsHub</title>
               <meta name="description" content="Learn more about MyApp and what we do." />
               <meta property="og:title" content="About Us - MyApp" />
-            </Helmet>
+            </Helmet> */}
 
 
         <figure className="px-10 pt-10">
