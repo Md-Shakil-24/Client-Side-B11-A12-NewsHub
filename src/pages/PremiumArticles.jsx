@@ -5,6 +5,7 @@ import { AuthContext } from "../provider/AuthProvider";
 import LoadingSpinner from "../component/Spinner";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const PremiumArticles = () => {
   const { user, isPremiumUser } = useContext(AuthContext);
@@ -58,6 +59,13 @@ const PremiumArticles = () => {
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-primary">
         Premium Articles
       </h1>
+
+ <Helmet>
+              <title>Premium-Articles | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
+
 
       {articles.length === 0 ? (
         <p className="text-center text-gray-500">No premium articles available.</p>
