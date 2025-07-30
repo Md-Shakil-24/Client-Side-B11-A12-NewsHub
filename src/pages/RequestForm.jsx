@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../provider/AuthProvider";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const PublisherRequestForm = () => {
   const { user } = useContext(AuthContext);
@@ -79,6 +80,16 @@ const PublisherRequestForm = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-md">
+
+
+<Helmet>
+        <title>Be-Come-Publisher-Request | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
+
+
+
+
       <h2 className="text-2xl font-bold mb-4 text-center">Become a Publisher</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
