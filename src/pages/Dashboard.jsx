@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaHome, FaUsers, FaNewspaper, FaPlus, FaChartPie, FaBars, FaTimes } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -228,6 +229,11 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      <Helmet>
+              <title>Dashboard | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
      
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded-md text-white"
