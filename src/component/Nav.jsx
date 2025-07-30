@@ -127,7 +127,7 @@ const Nav = () => {
   );
 
   return (
-    <div className="bg-base-100/10 shadow-lg ">
+    <div className="bg-base-100/50 shadow-lg ">
     <div className="navbar container mx-auto px-2 lg:px-4  ">
       
       <div className="navbar-start">
@@ -169,7 +169,7 @@ const Nav = () => {
         <ul className="menu menu-horizontal px-1">{navLinks}</ul>
       </div>
 
-      <div className="navbar-end gap-2">
+      <div className="navbar-end pr-5 lg:pr-1">
         {user ? (
           <div className="dropdown dropdown-end">
             <label
@@ -207,6 +207,7 @@ const Nav = () => {
             <Link to="/auth/signUp" className="btn btn-primary">
               Sign Up
             </Link>
+            <ThemeToggle></ThemeToggle>
           </div>
         )}
       </div>

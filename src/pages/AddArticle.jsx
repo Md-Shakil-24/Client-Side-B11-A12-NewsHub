@@ -226,7 +226,7 @@ const AddArticle = () => {
                     options={tagOptions}
                     className="react-select-container"
                     classNamePrefix="react-select"
-                    placeholder="Select tags (max 3)"
+                    placeholder="Select tags"
                     styles={{
                       control: (base) => ({
                         ...base,
@@ -245,7 +245,7 @@ const AddArticle = () => {
               <span className="label-text font-medium text-gray-700">Description *</span>
             </label>
             <textarea
-              className={`textarea textarea-bordered h-40 ${errors?.description ? 'textarea-error' : 'focus:ring-2 focus:ring-blue-500'}`}
+              className={`textarea w-full textarea-bordered h-40 ${errors?.description ? 'textarea-error' : 'focus:ring-2 focus:ring-blue-500'}`}
               placeholder="Write your article content here..."
               {...register("description", { required: "Description is required" })}
             />

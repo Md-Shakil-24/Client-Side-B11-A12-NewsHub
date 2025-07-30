@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight, FaCrown, FaGem, FaStar, FaClock } from "react-icons/fa";
 import LoadingSpinner from "../component/Spinner";
+import { Helmet } from "react-helmet";
 
 const Subscription = () => {
   const { user, refreshUserStatus } = useContext(AuthContext);
@@ -200,6 +201,20 @@ const Subscription = () => {
 
   return (
     <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8">
+
+
+
+
+<Helmet>
+        <title>Subscription | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
+
+
+
+
+
+
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-4">

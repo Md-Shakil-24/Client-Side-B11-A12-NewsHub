@@ -24,7 +24,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-2xl border bg-cyan-900 hover:cursor-pointer border-gray-500 dark:border-gray-300"
+      className="p-[2px] rounded-2xl border flex justify-center bg-cyan-900 hover:cursor-pointer border-gray-500 dark:border-gray-300"
       aria-label="Toggle Dark Mode"
       title="Toggle to change theme"
     >

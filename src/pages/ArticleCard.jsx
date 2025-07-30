@@ -40,7 +40,7 @@ const ArticleCard = ({ article }) => {
     >
 
        <Helmet>
-              <title>Article-Card | NewsHub</title>
+              <title>Home | NewsHub</title>
               <meta name="description" content="Learn more about MyApp and what we do." />
               <meta property="og:title" content="About Us - MyApp" />
             </Helmet>
