@@ -8,6 +8,7 @@ import Select from "react-select";
 import { imageUpload } from "../api/utils";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 const MyArticles = () => {
   const { user } = useContext(AuthContext);
@@ -237,6 +238,13 @@ const MyArticles = () => {
             </div>
           </div>
         </div>
+
+
+         <Helmet>
+                      <title>My-Articles | NewsHub</title>
+                      <meta name="description" content="Learn more about MyApp and what we do." />
+                      <meta property="og:title" content="About Us - MyApp" />
+                    </Helmet>
 
         {articles.length === 0 ? (
           <div className="text-center py-12">
