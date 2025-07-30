@@ -53,6 +53,12 @@ const Category = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+
+      <Helmet>
+              <title>Category| NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">
           {tag.charAt(0).toUpperCase() + tag.slice(1)} News

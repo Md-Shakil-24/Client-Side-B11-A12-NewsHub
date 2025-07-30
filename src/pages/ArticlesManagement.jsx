@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
@@ -72,6 +73,11 @@ const ArticlesManagement = () => {
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">Articles Management</h1>
+      <Helmet>
+              <title>Article-Manage | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
       <div className="bg-base-100 p-4 rounded-lg shadow mb-8">
         <h2 className="text-xl font-bold mb-4">All Articles ({articles.length})</h2>
         <div className="overflow-x-auto">
