@@ -1,8 +1,18 @@
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 const LearnMoreAbout = () => {
   return (
     <div className="min-h-screen bg-base-100 py-12 px-4 sm:px-6 lg:px-8">
+
+ <Helmet>
+              <title>About | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
+
+
+
       <div className="max-w-7xl mx-auto">
        
         <div className="text-center mb-16">
