@@ -13,54 +13,71 @@ const SignUp = () => {
   const { createUser, setUser, signInWithGoogle } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY;
 
   const saveUserToDB = async (userData, token) => {
     try {
-      await axios.put(`${API_URL}/users/${userData.email}`, {
-        ...userData,
-        roles: ['user'],
-        createdAt: new Date(),
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.put(
+        `${API_URL}/users/${userData.email}`,
+        {
+          ...userData,
+          roles: ['user'],
+          createdAt: new Date(),
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (err) {
-      console.error("Failed to save user to DB", err);
+      console.error('Failed to save user to DB', err);
     }
   };
 
-  const handleGoogleLogin = () => {
-    signInWithGoogle()
-      .then(async (result) => {
-        const user = result.user;
-        const token = await getJWT();
-        localStorage.setItem('token', token);
-        setUser(user);
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const url = `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`;
 
-        await saveUserToDB({
+    const response = await axios.post(url, formData);
+    return response.data?.data?.url;
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithGoogle();
+      const user = result.user;
+      const token = await getJWT();
+      localStorage.setItem('token', token);
+      setUser(user);
+
+      await saveUserToDB(
+        {
           name: user.displayName,
-          photo: user.photoURL,
+          photo: user.photoURL || '',
           email: user.email,
-        }, token);
+        },
+        token
+      );
 
-        toast.success('Signed in with Google successfully', {
-          position: 'top-center',
-          autoClose: 2000,
-          onClose: () => navigate(from),
-        });
-      })
-      .catch(err => {
-        toast.error('Google login failed: ' + err.message, {
-          position: 'top-center',
-          autoClose: 2000,
-        });
+      toast.success('Signed in with Google successfully', {
+        position: 'top-center',
+        autoClose: 2000,
+        onClose: () => navigate(from),
       });
+    } catch (err) {
+      toast.error('Google login failed: ' + err.message, {
+        position: 'top-center',
+        autoClose: 2000,
+      });
+    }
   };
 
   const handleRegister = async (e) => {
@@ -69,12 +86,17 @@ const SignUp = () => {
 
     const form = e.target;
     const name = form.name.value;
-    const photo = form.photoURL.value;
     const email = form.email.value;
     const password = form.password.value;
 
+    if (!imageFile) {
+      toast.error('Please select a photo to upload.');
+      setLoading(false);
+      return;
+    }
+
     if (password.length < 6 || !/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
-      toast.error('Password must be at least 6 chars and include both upper and lower case letters.', {
+      toast.error('Password must be at least 6 characters and include upper and lower case letters.', {
         position: 'top-center',
         autoClose: 2000,
       });
@@ -83,22 +105,24 @@ const SignUp = () => {
     }
 
     try {
+      const uploadedImageUrl = await uploadImageToImgBB(imageFile);
+
       const result = await createUser(email, password);
       const user = result.user;
 
       await updateProfile(user, {
         displayName: name,
-        photoURL: photo,
+        photoURL: uploadedImageUrl,
       });
 
-      setUser({ ...user, displayName: name, photoURL: photo });
+      setUser({ ...user, displayName: name, photoURL: uploadedImageUrl });
 
       const token = await getJWT();
       localStorage.setItem('token', token);
 
-      await saveUserToDB({ name, photo, email }, token);
+      await saveUserToDB({ name, photo: uploadedImageUrl, email }, token);
 
-      toast.success('Register successfully', {
+      toast.success('Registered successfully', {
         position: 'top-center',
         autoClose: 2000,
         onClose: () => navigate(from),
@@ -117,8 +141,7 @@ const SignUp = () => {
     <div className="mt-7 mb-7 flex items-center justify-center px-4">
       <Helmet>
         <title>Sign Up | NewsHub</title>
-        <meta name="description" content="Create an account for our library system." />
-        <meta property="og:title" content="Sign Up - LibraryManage" />
+        <meta name="description" content="Create an account for NewsHub." />
       </Helmet>
 
       <div className="w-full max-w-md border border-amber-200 bg-white p-8 rounded-md shadow">
@@ -152,10 +175,10 @@ const SignUp = () => {
             disabled={loading}
           />
           <input
-            name="photoURL"
-            type="text"
-            placeholder="Photo URL"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files[0])}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md"
             required
             disabled={loading}
           />
@@ -178,7 +201,7 @@ const SignUp = () => {
             />
             <button
               type="button"
-              onClick={() => setShowPassword(prev => !prev)}
+              onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-lg focus:outline-none"
               disabled={loading}
             >
@@ -190,9 +213,7 @@ const SignUp = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-2 rounded-md transition ${
-              loading
-                ? 'bg-gray-500 cursor-not-allowed text-white'
-                : 'bg-black hover:bg-gray-800 text-white'
+              loading ? 'bg-gray-500 cursor-not-allowed text-white' : 'bg-black hover:bg-gray-800 text-white'
             }`}
           >
             {loading ? 'Processing Registering...' : 'Register Now'}

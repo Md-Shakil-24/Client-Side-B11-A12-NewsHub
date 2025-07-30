@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const AllPublishers = () => {
   const queryClient = useQueryClient();
@@ -39,6 +40,12 @@ const AllPublishers = () => {
 
   return (
     <div className="p-6">
+
+ <Helmet>
+        <title>All-Publisher | admin | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
+
       <h2 className="text-2xl font-bold mb-6">All Publishers</h2>
       <table className="table w-full">
         <thead>

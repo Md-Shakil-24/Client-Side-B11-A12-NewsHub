@@ -1,11 +1,12 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 
 const PublisherRequests = () => {
   const queryClient = useQueryClient();
 
+  // Fetch requests
   const { data: requests = [], isLoading, isError } = useQuery({
     queryKey: ["publisher-requests"],
     queryFn: async () => {
@@ -14,6 +15,7 @@ const PublisherRequests = () => {
     },
   });
 
+  // Approve mutation
   const approve = useMutation({
     mutationFn: (id) =>
       axios.patch(`${import.meta.env.VITE_API_URL}/admin/publisher-requests/approve/${id}`),
@@ -23,6 +25,7 @@ const PublisherRequests = () => {
     },
   });
 
+  // Decline mutation
   const decline = useMutation({
     mutationFn: (id) =>
       axios.patch(`${import.meta.env.VITE_API_URL}/admin/publisher-requests/decline/${id}`),
@@ -37,10 +40,17 @@ const PublisherRequests = () => {
 
   return (
     <div className="p-6">
+      <Helmet>
+        <title>Publisher Requests | Admin | NewsHub</title>
+        <meta name="description" content="Review and approve publisher account requests on NewsHub." />
+      </Helmet>
+
       <h2 className="text-2xl font-bold mb-6">Publisher Requests</h2>
 
       {requests.length === 0 ? (
-        <div className="text-center text-gray-500 text-lg py-10">📭 No publisher requests found.</div>
+        <div className="text-center text-gray-500 text-lg py-10">
+          📭 No publisher requests found.
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="table w-full">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const AddPublisher = () => {
   const [name, setName] = useState("");
@@ -70,6 +71,10 @@ const AddPublisher = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow mt-10">
+      <Helmet>
+        <title>Add-Publisher | admin | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
       <h2 className="text-2xl font-bold mb-4 text-center">Add Publisher</h2>
 
       <form onSubmit={handleAddPublisher} className="space-y-4">

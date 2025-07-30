@@ -6,17 +6,16 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { imageUpload } from "../api/utils";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const MyArticles = () => {
   const { user } = useContext(AuthContext);
   
- 
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentArticle, setCurrentArticle] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-
 
   const { 
     register: registerEdit, 
@@ -30,7 +29,6 @@ const MyArticles = () => {
   } = useForm();
 
   const selectedEditImage = watchEdit("image");
-
 
   const { data: publishers = [], isLoading: isPublishersLoading } = useQuery({
     queryKey: ["publishers"],
@@ -57,7 +55,6 @@ const MyArticles = () => {
     { value: "health", label: "Health" },
   ];
 
-  
   const {
     data: articles = [],
     isLoading,
@@ -80,7 +77,6 @@ const MyArticles = () => {
     enabled: !!user?.email,
   });
 
-
   const { mutate: deleteArticle } = useMutation({
     mutationFn: async (id) => {
       const token = await user.getIdToken();
@@ -99,7 +95,6 @@ const MyArticles = () => {
     },
   });
 
- 
   const { mutate: updateArticle, isLoading: isUpdating } = useMutation({
     mutationFn: async (updatedData) => {
       const token = await user.getIdToken();
@@ -123,13 +118,11 @@ const MyArticles = () => {
     },
   });
 
- 
   const openDetailsModal = (article) => {
     setCurrentArticle(article);
     setShowDetailsModal(true);
   };
 
- 
   const openEditModal = (article) => {
     setCurrentArticle(article);
     resetEdit({
@@ -143,14 +136,12 @@ const MyArticles = () => {
     setShowEditModal(true);
   };
 
- 
   const handleEditSave = async (data) => {
     try {
       clearEditErrors("image");
 
       let imageUrl = currentArticle.image;
       
-     
       if (data?.image?.[0]) {
         const file = data.image[0];
         
@@ -185,6 +176,34 @@ const MyArticles = () => {
       setUploadProgress(0);
       toast.error(error?.message || "Error updating article");
     }
+  };
+
+  const showDeclineReason = (article) => {
+    Swal.fire({
+      title: 'Article Declined',
+      html: `
+        <div class="text-left">
+          <p class="mb-2"><strong>Status:</strong> <span class="badge badge-error">Declined</span></p>
+          <p class="mb-2"><strong>Title:</strong> ${article.title}</p>
+          <p class="mb-2"><strong>Reason:</strong></p>
+          <div class="bg-gray-100 p-3 rounded mb-4">${article.declineReason || 'No reason provided'}</div>
+          <p class="text-sm text-gray-500">Please review the feedback, make necessary changes, and resubmit your article.</p>
+        </div>
+      `,
+      icon: 'error',
+      confirmButtonText: 'Okay',
+      showCancelButton: true,
+      // cancelButtonText: 'Edit Article',
+      focusConfirm: false,
+      preConfirm: () => {},
+      didOpen: () => {
+        const cancelButton = Swal.getCancelButton();
+        cancelButton.addEventListener('click', () => {
+          openEditModal(article);
+          Swal.close();
+        });
+      }
+    });
   };
 
   if (!user?.email) return <p className="text-center mt-10">Loading user...</p>;
@@ -222,6 +241,9 @@ const MyArticles = () => {
         {articles.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg">You haven't posted any articles yet.</div>
+            <Link to="/dashboard/add-article" className="btn btn-primary mt-4">
+              Create Your First Article
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -242,24 +264,30 @@ const MyArticles = () => {
                     <th>{index + 1}</th>
                     <td className="font-medium">{article.title}</td>
                     <td>
-                      <span
-                        className={`badge ${
-                          article.status === "approved"
-                            ? "badge-success"
-                            : article.status === "declined"
-                            ? "badge-error"
-                            : "badge-warning"
-                        }`}
-                      >
-                        {article.status}
-                        {article.status === "declined" && article.declineReason && (
-                          <span className="tooltip" data-tip={article.declineReason}>
-                            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex items-center">
+                        <span
+                          className={`badge ${
+                            article.status === "approved"
+                              ? "badge-success"
+                              : article.status === "declined"
+                              ? "badge-error"
+                              : "badge-warning"
+                          }`}
+                        >
+                          {article.status}
+                        </span>
+                        {article.status === "declined" && (
+                          <button 
+                            onClick={() => showDeclineReason(article)}
+                            className="ml-2 btn btn-circle btn-xs btn-ghost"
+                            aria-label="View decline reason"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                          </span>
+                          </button>
                         )}
-                      </span>
+                      </div>
                     </td>
                     <td>
                       {article.isPremium ? (
@@ -270,14 +298,11 @@ const MyArticles = () => {
                     </td>
                     <td>{article.viewCount || 0}</td>
                     <td className="flex gap-2">
-
-                     <Link to={`/article/${article._id}`}>
-                      <button
-                        className="btn btn-sm btn-info"
-                        // onClick={() => openDetailsModal(article)}
-                      >
-                        Details
-                      </button></Link>
+                      <Link to={`/article/${article._id}`}>
+                        <button className="btn btn-sm btn-info">
+                          Details
+                        </button>
+                      </Link>
                       <button
                         className="btn btn-sm btn-warning"
                         onClick={() => openEditModal(article)}
@@ -288,9 +313,19 @@ const MyArticles = () => {
                       <button
                         className="btn btn-sm btn-error"
                         onClick={() => {
-                          if (window.confirm("Are you sure you want to delete this article?")) {
-                            deleteArticle(article._id);
-                          }
+                          Swal.fire({
+                            title: 'Delete Article?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              deleteArticle(article._id);
+                            }
+                          });
                         }}
                       >
                         Delete
@@ -303,7 +338,6 @@ const MyArticles = () => {
           </div>
         )}
 
-     
         {showDetailsModal && currentArticle && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -393,7 +427,6 @@ const MyArticles = () => {
           </div>
         )}
 
-      
         {showEditModal && currentArticle && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -403,7 +436,6 @@ const MyArticles = () => {
               </div>
 
               <form onSubmit={handleEditSubmit(handleEditSave)} className="p-6 space-y-6">
-               
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-medium text-gray-700">Title *</span>
@@ -424,9 +456,7 @@ const MyArticles = () => {
                   )}
                 </div>
 
-            
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text font-medium text-gray-700">Publisher *</span>
@@ -469,7 +499,6 @@ const MyArticles = () => {
                     )}
                   </div>
 
-                 
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text font-medium text-gray-700">Tags</span>
@@ -497,7 +526,6 @@ const MyArticles = () => {
                   </div>
                 </div>
 
-               
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-medium text-gray-700">Description *</span>
@@ -517,7 +545,6 @@ const MyArticles = () => {
                   )}
                 </div>
 
-              
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-medium text-gray-700">Featured Image</span>
@@ -574,7 +601,6 @@ const MyArticles = () => {
                   )}
                 </div>
 
-            
                 <div className="form-control">
                   <label className="flex items-center space-x-3 cursor-pointer">
                     <input
@@ -587,7 +613,6 @@ const MyArticles = () => {
                   <p className="text-sm text-gray-500 mt-1">Premium articles are only visible to subscribed users</p>
                 </div>
 
-              
                 <div className="flex justify-end gap-4 pt-4">
                   <button
                     type="button"

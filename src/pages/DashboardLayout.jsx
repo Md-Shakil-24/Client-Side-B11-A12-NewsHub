@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 
 
 const DashboardLayout = () => {
@@ -141,6 +142,11 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+
+      <Helmet>
+        <title>OverView | admin | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
     
       <aside className="hidden lg:block fixed top-0 left-0 h-full z-40">
         <SidebarContent />

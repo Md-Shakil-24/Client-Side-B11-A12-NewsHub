@@ -1,4 +1,3 @@
-
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -6,6 +5,7 @@ import Swal from "sweetalert2";
 
 const ArticlesManagement = () => {
   const queryClient = useQueryClient();
+
   const { data: articles = [] } = useQuery({
     queryKey: ["admin-articles"],
     queryFn: async () => {
@@ -22,9 +22,7 @@ const ArticlesManagement = () => {
       inputPlaceholder: "Enter the reason...",
       showCancelButton: true,
       inputValidator: (value) => {
-        if (!value) {
-          return "You need to provide a reason!";
-        }
+        if (!value) return "You need to provide a reason!";
       },
     });
 
@@ -39,13 +37,15 @@ const ArticlesManagement = () => {
     }
   };
 
-  const handleMakePremium = async (id) => {
+  const handleMakePremium = async (id, newStatus) => {
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/admin/articles/premium/${id}`);
-      toast.success("Article premium status updated");
+      await axios.patch(`${import.meta.env.VITE_API_URL}/admin/articles/premium/${id}`, {
+        isPremium: newStatus,
+      });
+      toast.success(`Marked as ${newStatus ? "Premium" : "General"}`);
       queryClient.invalidateQueries(["admin-articles"]);
     } catch (error) {
-      toast.error("Failed to update article premium status");
+      toast.error("Failed to update premium status");
     }
   };
 
@@ -111,17 +111,25 @@ const ArticlesManagement = () => {
                       type="checkbox" 
                       className="toggle toggle-primary" 
                       checked={article.isPremium}
-                      onChange={() => handleMakePremium(article._id)}
+                      onChange={(e) => handleMakePremium(article._id, e.target.checked)}
                     />
                   </td>
                   <td>{article.viewCount || 0}</td>
-                  <td>
+                  <td className="space-x-2">
                     <button 
                       className="btn btn-xs btn-error"
                       onClick={() => handleDeleteArticle(article._id)}
                     >
                       Delete
                     </button>
+                    {article.status !== 'declined' && (
+                      <button 
+                        className="btn btn-xs btn-warning"
+                        onClick={() => handleDeclineArticle(article._id)}
+                      >
+                        Decline
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -1,9 +1,9 @@
-
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const ArticleRequests = () => {
   const queryClient = useQueryClient();
@@ -12,7 +12,10 @@ const ArticleRequests = () => {
     queryKey: ["admin-articles"],
     queryFn: async () => {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/articles`);
-      return res.data;
+      const sorted = res.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      return sorted;
     },
   });
 
@@ -53,55 +56,60 @@ const ArticleRequests = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
-
-  if (!pendingArticles.length) {
-    return (
-      <div className="bg-info text-info-content p-4 rounded-lg shadow">
-        <h2 className="text-xl font-bold">No Pending Article Requests</h2>
-        <p className="mt-2">All articles have been reviewed.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-warning text-warning-content p-4 rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4">Pending Articles ({pendingArticles.length})</h2>
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author Email</th>
-              <th>Publisher</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pendingArticles.map(article => (
-              <tr key={article._id}>
-                <td>{article.title}</td>
-                <td>{article.authorEmail}</td>
-                <td>{article.publisher || "N/A"}</td>
-                <td className="flex justify-center gap-2">
-                  <button
-                    className="btn btn-xs btn-success"
-                    onClick={() => approveArticle(article._id)}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="btn btn-xs btn-error"
-                    onClick={() => declineArticle(article._id)}
-                  >
-                    Decline
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Helmet>
+        <title>Pending Article Requests | Admin | NewsHub</title>
+        <meta name="description" content="Review and moderate pending articles." />
+      </Helmet>
+
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : pendingArticles.length === 0 ? (
+        <div className="bg-info text-info-content p-4 rounded-lg shadow">
+          <h2 className="text-xl font-bold">No Pending Article Requests</h2>
+          <p className="mt-2">All articles have been reviewed.</p>
+        </div>
+      ) : (
+        <>
+          <h2 className="text-xl font-bold mb-4">Pending Articles ({pendingArticles.length})</h2>
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author Email</th>
+                  <th>Publisher</th>
+                  <th className="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingArticles.map(article => (
+                  <tr key={article._id}>
+                    <td>{article.title}</td>
+                    <td>{article.authorEmail}</td>
+                    <td>{article.publisher || "N/A"}</td>
+                    <td className="flex justify-center gap-2">
+                      <button
+                        className="btn btn-xs btn-success"
+                        onClick={() => approveArticle(article._id)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="btn btn-xs btn-error"
+                        onClick={() => declineArticle(article._id)}
+                      >
+                        Decline
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 };

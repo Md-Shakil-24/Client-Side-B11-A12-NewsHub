@@ -1,6 +1,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
@@ -37,6 +38,10 @@ const UsersManagement = () => {
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">Users Management</h1>
+      <Helmet>
+              <title>All-User | admin | NewsHub</title>
+              <meta name="description" content="Create an account for NewsHub." />
+            </Helmet>
       <div className="bg-base-100 p-4 rounded-lg shadow mb-8">
         <h2 className="text-xl font-bold mb-4">All Users ({users.length})</h2>
         <div className="overflow-x-auto">

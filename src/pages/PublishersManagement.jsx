@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 
 const PublishersManagement = () => {
   const queryClient = useQueryClient();
@@ -38,6 +39,13 @@ const PublishersManagement = () => {
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">Publishers Management</h1>
+
+
+<Helmet>
+        <title>Publisher-Manage | admin | NewsHub</title>
+        <meta name="description" content="Create an account for NewsHub." />
+      </Helmet>
+
       <div className="bg-base-100 p-4 rounded-lg shadow mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">All Publishers ({publishers.length})</h2>
