@@ -140,11 +140,7 @@ const Home = () => {
   return (
     <div className="container mx-auto px-4 py-8">
 
-           <Helmet>
-              <title>Home | NewsHub</title>
-              <meta name="description" content="Learn more about MyApp and what we do." />
-              <meta property="og:title" content="About Us - MyApp" />
-            </Helmet>
+          
     
       <div className="hero min-h-[60vh] bg-base-200 rounded-xl mb-12">
         <div className="hero-content text-center">
