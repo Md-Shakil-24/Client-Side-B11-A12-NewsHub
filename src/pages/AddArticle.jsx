@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Select from "react-select";
 import { AuthContext } from "../provider/AuthProvider";
 import { imageUpload } from "../api/utils";
+import { Helmet } from 'react-helmet';
 
 const AddArticle = () => {
   const { user } = useContext(AuthContext);
@@ -128,15 +129,23 @@ const AddArticle = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
+
+
+<Helmet>
+        <title>Add-Article | NewsHub</title>
+        <meta name="description" content="Learn more about MyApp and what we do." />
+        <meta property="og:title" content="About Us - MyApp" />
+      </Helmet>
+
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
+        
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
           <h1 className="text-3xl font-bold">Create New Article</h1>
           <p className="opacity-90 mt-1">Share your news with the world</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-          {/* Title */}
+         
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium text-gray-700">Title *</span>
