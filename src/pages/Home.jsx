@@ -10,18 +10,21 @@ import { Pie } from "react-chartjs-2";
 import SubscriptionModal from "../component/SubcripstionModal";
 import { Helmet } from "react-helmet";
 
+import Slider from "react-slick";  
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
 
- 
   useEffect(() => {
     const timer = setTimeout(() => setShowModal(true), 10000);
     return () => clearTimeout(timer);
   }, []);
 
- 
+  
   const {
     data: latestArticles = [],
     isLoading: latestLoading,
@@ -34,7 +37,6 @@ const Home = () => {
     },
   });
 
- 
   const {
     data: trendingArticles = [],
     isLoading: trendingLoading,
@@ -47,7 +49,7 @@ const Home = () => {
     },
   });
 
- 
+  
   const {
     data: publishers = [],
     isLoading: publishersLoading,
@@ -73,15 +75,14 @@ const Home = () => {
     },
   });
 
-
   const publisherData = {
     labels: publishers.map((p) => p.name),
     datasets: [
       {
         label: "Publishers",
-        data: publishers.map(() => 1), 
+        data: publishers.map(() => 1),
         backgroundColor: [
-          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', 
+          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
           '#FF9F40', '#8AC249', '#EA5545', '#F46A9B', '#EF9B20',
           '#EDBF33', '#87BC45', '#27AEEF', '#B33DC6', '#00CC99',
           '#FF99CC', '#FF6666', '#6699FF', '#CC99FF', '#FFCC99'
@@ -93,7 +94,6 @@ const Home = () => {
     ]
   };
 
-  
   const pieOptions = {
     plugins: {
       legend: {
@@ -137,15 +137,39 @@ const Home = () => {
     );
   }
 
+  
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3500,
+    arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 2 },
+      },
+      {
+        breakpoint: 640,
+        settings: { slidesToShow: 1 },
+      },
+    ],
+  };
+
   return (
+
+    
     <div className="container mx-auto px-4 py-8">
 
-           <Helmet>
-              <title>Home | NewsHub</title>
-              <meta name="description" content="Learn more about MyApp and what we do." />
-              <meta property="og:title" content="About Us - MyApp" />
-            </Helmet>
-    
+      <Helmet>
+        <title>Home | NewsHub</title>
+        <meta name="description" content="Learn more about MyApp and what we do." />
+        <meta property="og:title" content="About Us - MyApp" />
+      </Helmet>
+
       <div className="hero min-h-[60vh] bg-base-200 rounded-xl mb-12">
         <div className="hero-content text-center">
           <div className="max-w-2xl">
@@ -160,27 +184,24 @@ const Home = () => {
     
       {latestArticles.length > 0 && (
         <section className="mb-16">
-       
           <div className="flex items-center mb-6">
             <div className="w-4 h-8 bg-red-600 rounded mr-3"></div>
             <h2 className="text-3xl font-bold">BREAKING NEWS</h2>
             <div className="flex-1 ml-3 h-[2px] bg-gradient-to-r from-red-600 to-transparent"></div>
           </div>
-          
-       
-<div className="bg-red-50 p-4 mb-6 rounded-lg overflow-hidden">
-  <div className="marquee-container">
-    <div className="marquee-content">
-      {latestArticles.map((article, index) => (
-        <span key={index} className="marquee-item">
-          {article.title} • 
-        </span>
-      ))}
-    </div>
-  </div>
-</div>
-          
-       
+
+          <div className="bg-red-50 p-4 mb-6 rounded-lg overflow-hidden">
+            <div className="marquee-container">
+              <div className="marquee-content">
+                {latestArticles.map((article, index) => (
+                  <span key={index} className="marquee-item">
+                    {article.title} • 
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {latestArticles.slice(0, 2).map((article, index) => (
               <div 
@@ -215,14 +236,16 @@ const Home = () => {
         </section>
       )}
 
-  
+      
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">🔥 Trending Articles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trendingArticles.map((article) => (
-            <ArticleCard key={article._id} article={article} />
+        <Slider {...sliderSettings} className="px-4">
+          {trendingArticles.map(article => (
+            <div key={article._id} className="px-2">
+              <ArticleCard article={article} />
+            </div>
           ))}
-        </div>
+        </Slider>
       </section>
 
     
@@ -235,7 +258,7 @@ const Home = () => {
         </div>
       </section>
 
-    
+      
       <section className="mb-16 pb-20 bg-base-200 p-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-center">📊 Platform Stats</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -266,7 +289,7 @@ const Home = () => {
         </div>
       </section>
 
-     
+      
       <section className="mb-16 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-center">✨ Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -294,7 +317,7 @@ const Home = () => {
         </div>
       </section>
 
-     
+      
       <section className="mb-16 bg-base-200 p-8 rounded-xl">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="md:w-1/2">
@@ -321,7 +344,7 @@ const Home = () => {
         </div>
       </section>
 
-  
+      
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">📦 Choose Your Plan</h2>
         <div className="grid md:grid-cols-3 gap-8">
@@ -372,33 +395,31 @@ const Home = () => {
         </Link>
       </div>
 
-      {/* Modal */}
+      
       <SubscriptionModal showModal={showModal} setShowModal={setShowModal} />
 
-      
-
-<style jsx>{`
-  .marquee-container {
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .marquee-content {
-    display: inline-block;
-    padding-left: 100%; /* Start off-screen to the right */
-    animation: marquee 15s linear infinite;
-  }
-  .marquee-item {
-    display: inline-block;
-    padding: 0 2rem;
-    font-weight: bold;
-    color: #dc2626;
-  }
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-  }
-`}</style>
+      <style jsx>{`
+        .marquee-container {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        .marquee-content {
+          display: inline-block;
+          padding-left: 100%; /* Start off-screen to the right */
+          animation: marquee 15s linear infinite;
+        }
+        .marquee-item {
+          display: inline-block;
+          padding: 0 2rem;
+          font-weight: bold;
+          color: #dc2626;
+        }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+      `}</style>
     </div>
   );
 };
