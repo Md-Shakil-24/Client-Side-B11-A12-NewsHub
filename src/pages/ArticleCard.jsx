@@ -3,6 +3,7 @@ import { FaEye, FaBookmark, FaLock, FaCrown } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const ArticleCard = ({ article }) => {
   const { user, isPremiumUser } = useContext(AuthContext);
@@ -37,6 +38,12 @@ const ArticleCard = ({ article }) => {
         isLocked ? "border-l-4 border-yellow-400" : ""
       }`}
     >
+
+       <Helmet>
+              <title>Article-Card | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
       
       {article.isPremium && (
         <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded-full flex items-center">

@@ -5,6 +5,7 @@ import { AuthContext } from "../provider/AuthProvider";
 import axios from "axios";
 import LoadingSpinner from "../component/Spinner"; 
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 const ArticleDetailsPage = () => {
   const { id } = useParams();
@@ -57,11 +58,22 @@ const ArticleDetailsPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
+
+
+          <Helmet>
+              <title>Article-Details | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
+
+
       <img
         src={article?.image}
         alt={article?.title}
         className="w-full h-96 object-cover rounded-lg mb-6"
       />
+
+       
 
       <h1 className="text-4xl font-bold mb-2">{article?.title}</h1>
       <p className="text-gray-500 mb-6">
@@ -98,6 +110,12 @@ const ArticleDetailsPage = () => {
         </div>
       ) : (
         <div className="prose max-w-none">
+
+          <Helmet>
+              <title>Article-Details | NewsHub</title>
+              <meta name="description" content="Learn more about MyApp and what we do." />
+              <meta property="og:title" content="About Us - MyApp" />
+            </Helmet>
           <p className="text-lg mb-6">{article?.description}</p>
           {article?.isPremium && article?.premiumContent && (
             <div className="mt-8 p-4 rounded-lg bg-blue-50 border border-blue-300">
