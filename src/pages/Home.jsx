@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ArticleCard from "../pages/ArticleCard";
 import PublisherCard from "../pages/PublisherCard";
 import CountUp from "react-countup";
@@ -9,8 +9,10 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import SubscriptionModal from "../component/SubcripstionModal";
 import { Helmet } from "react-helmet";
+import Slider from "react-slick";
+import Swal from "sweetalert2";
+import { AuthContext } from "../provider/AuthProvider";
 
-import Slider from "react-slick";  
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -18,13 +20,14 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
+  const { isPremiumUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowModal(true), 10000);
     return () => clearTimeout(timer);
   }, []);
 
-  
   const {
     data: latestArticles = [],
     isLoading: latestLoading,
@@ -49,7 +52,6 @@ const Home = () => {
     },
   });
 
-  
   const {
     data: publishers = [],
     isLoading: publishersLoading,
@@ -61,7 +63,6 @@ const Home = () => {
       return res.data;
     },
   });
-
 
   const {
     data: stats = {},
@@ -102,9 +103,7 @@ const Home = () => {
           padding: 20,
           usePointStyle: true,
           pointStyle: 'circle',
-          font: {
-            size: 12
-          }
+          font: { size: 12 }
         }
       },
       tooltip: {
@@ -137,7 +136,6 @@ const Home = () => {
     );
   }
 
-  
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -148,21 +146,33 @@ const Home = () => {
     autoplaySpeed: 3500,
     arrows: true,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } },
     ],
   };
 
-  return (
+  // Handle click on breaking news article
+  const handleBreakingNewsClick = (article) => {
+    if (article.isPremium && !isPremiumUser) {
+      Swal.fire({
+        icon: "info",
+        title: "Premium Content",
+        text: "Please subscribe to access premium articles.",
+        showCancelButton: true,
+        confirmButtonText: "Subscribe",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/subscription");
+        }
+      });
+    } else {
+      navigate(`/article/${article._id}`);
+    }
+  };
 
-    
-    <div className="container mx-auto px-4  py-8">
+  return (
+    <div className="container mx-auto px-4 py-8">
 
       <Helmet>
         <title>Home | NewsHub</title>
@@ -181,7 +191,6 @@ const Home = () => {
         </div>
       </div>
 
-    
       {latestArticles.length > 0 && (
         <section className="mb-16">
           <div className="flex items-center mb-6">
@@ -203,29 +212,60 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {latestArticles.slice(0, 2).map((article, index) => (
-              <div 
-                key={article._id} 
-                className="relative overflow-hidden rounded-xl h-96"
+            {latestArticles.slice(0, 2).map((article) => (
+              <div
+                key={article._id}
+                className="relative overflow-hidden rounded-xl h-96 cursor-pointer"
+                onClick={() => handleBreakingNewsClick(article)}
+                style={{ userSelect: "none" }}
               >
-                <img 
-                  src={article.image} 
-                  alt={article.title} 
+                <img
+                  src={article.image}
+                  alt={article.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
                   <div>
-                    <h3 className="text-white text-xl font-bold mt-1">
-                      <Link to={`/article/${article._id}`} className="hover:underline">
-                        {article.title}
-                      </Link>
-                    </h3>
-                    <p className="text-gray-300 mt-2 line-clamp-2">
-                      {article.summary}
-                    </p>
+                    <h3 className="text-white text-xl font-bold mt-1">{article.title}</h3>
+                    <p className="text-gray-300 mt-2 line-clamp-2">{article.summary}</p>
                   </div>
                 </div>
-                {index === 0 && (
+
+                {/* Modified lighter lock overlay for premium articles if user not subscribed */}
+                {article.isPremium && !isPremiumUser && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.25) 100%)",
+                      backdropFilter: "blur(4px)",
+                      WebkitBackdropFilter: "blur(4px)",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-16 w-16 text-white drop-shadow-lg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 11c.552 0 1 .448 1 1v2c0 .552-.448 1-1 1s-1-.448-1-1v-2c0-.552.448-1 1-1z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17 8V7a5 5 0 00-10 0v1H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+
+                {/* LATEST badge */}
+                {latestArticles[0]._id === article._id && (
                   <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
                     LATEST
                   </div>
@@ -236,7 +276,6 @@ const Home = () => {
         </section>
       )}
 
-      
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">🔥 Trending Articles</h2>
         <Slider {...sliderSettings} className="px-4">
@@ -248,7 +287,6 @@ const Home = () => {
         </Slider>
       </section>
 
-    
       <section className="mb-16 ">
         <h2 className="text-3xl font-bold mb-8 text-center">📰 Our Publishers</h2>
         <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5 gap-6">
@@ -258,7 +296,6 @@ const Home = () => {
         </div>
       </section>
 
-      
       <section className="mb-16 pb-20 bg-base-200 p-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-center">📊 Platform Stats</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -289,7 +326,6 @@ const Home = () => {
         </div>
       </section>
 
-      
       <section className="mb-16 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-center">✨ Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -317,24 +353,23 @@ const Home = () => {
         </div>
       </section>
 
-      
       <section className="mb-16 bg-base-200 p-8 rounded-xl">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="md:w-1/2">
-            <img 
-              src="https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-              alt="About NewsHub" 
+            <img
+              src="https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+              alt="About NewsHub"
               className="rounded-lg shadow-xl w-full h-auto"
             />
           </div>
           <div className="md:w-1/2">
             <h2 className="text-3xl font-bold mb-4">About NewsHub</h2>
             <p className="mb-4">
-              NewsHub is a revolutionary platform that brings you the latest news from trusted sources around the world. 
+              NewsHub is a revolutionary platform that brings you the latest news from trusted sources around the world.
               Our mission is to deliver accurate, timely, and diverse news coverage to keep you informed.
             </p>
             <p className="mb-6">
-              Founded in 2023, we've grown to become one of the most comprehensive news aggregators, 
+              Founded in 2023, we've grown to become one of the most comprehensive news aggregators,
               partnering with over 50 publishers across various industries.
             </p>
             <Link to="/learnMore" className="btn btn-primary">
@@ -344,7 +379,6 @@ const Home = () => {
         </div>
       </section>
 
-      
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">📦 Choose Your Plan</h2>
         <div className="grid md:grid-cols-3 gap-8">
@@ -388,14 +422,12 @@ const Home = () => {
         </div>
       </section>
 
-    
       <div className="text-center mb-16">
         <Link to="/request-publisher" className="btn btn-primary">
           Request to Become Publisher
         </Link>
       </div>
 
-      
       <SubscriptionModal showModal={showModal} setShowModal={setShowModal} />
 
       <style jsx>{`
