@@ -127,8 +127,8 @@ const AllArticles = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1470px] mx-auto">
+    <div className="min-h-screen py-8 lg:px-2">
+      <div className="max-w-[1580px] mx-auto">
         <Helmet>
           <title>All-Articles | NewsHub</title>
           <meta name="description" content="Learn more about MyApp and what we do." />

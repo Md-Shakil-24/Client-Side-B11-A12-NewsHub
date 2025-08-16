@@ -172,7 +172,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-[1580px] mx-auto px-2 py-8">
 
       <Helmet>
         <title>Home | NewsHub</title>
@@ -231,7 +231,7 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Modified lighter lock overlay for premium articles if user not subscribed */}
+               
                 {article.isPremium && !isPremiumUser && (
                   <div
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -264,7 +264,7 @@ const Home = () => {
                   </div>
                 )}
 
-                {/* LATEST badge */}
+           
                 {latestArticles[0]._id === article._id && (
                   <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
                     LATEST
