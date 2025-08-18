@@ -17,3 +17,30 @@ html.dark {
 .body{
   background-color: aqua;
 }
+
+
+
+@keyframes waveDance {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    color: #3b82f6; /* blue */
+  }
+  25% {
+    transform: translateY(-8px) rotate(-5deg);
+    color: #ec4899; /* pink */
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+    color: #10b981; /* green */
+  }
+  75% {
+    transform: translateY(8px) rotate(5deg);
+    color: #f59e0b; /* amber */
+  }
+}
+
+.wave-letter {
+  display: inline-block;
+  animation: waveDance 3s infinite;
+  -webkit-animation: waveDance 3s infinite;
+}
