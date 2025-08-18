@@ -145,7 +145,7 @@ const Nav = () => {
 
   return (
     <nav
-      className={`bg-base-100/10 backdrop-blur-md sticky top-0 z-50 shadow-md transition-transform duration-300 ${
+      className={`bg-cyan-200/20 backdrop-blur-md sticky top-0 z-50 shadow-md transition-transform duration-300 ${
         showNav ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -165,13 +165,13 @@ const Nav = () => {
           </Link>
 
          
-          <div className="hidden lg:flex lg:items-center lg:gap-6 relative">
-            <ul className="menu menu-horizontal gap-4">
+          <div className="hidden lg:flex lg:items-center lg:gap-2 relative">
+            <ul className="menu menu-horizontal gap-2">
               <li>
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
-                    isActive ? "font-bold text-primary bg-amber-300 border-1 px-10 rounded-4xl" : "hover:text-primary border-1 bg-amber-200/30 px-10 hover:bg-amber-300 rounded-4xl"
+                    isActive ? "font-bold text-primary bg-amber-300 border-1 px-7 rounded-4xl" : "hover:text-primary border-1 bg-amber-200/30 px-7 hover:bg-amber-300 rounded-4xl"
                   }
                 >
                   Home
@@ -181,7 +181,7 @@ const Nav = () => {
                 <NavLink
                   to="/all-articles"
                   className={({ isActive }) =>
-                    isActive ? "font-bold text-primary bg-amber-300 px-10 rounded-4xl border-1" : "hover:text-primary hover:bg-amber-300  border-1 bg-amber-200/30 px-10 rounded-4xl"
+                    isActive ? "font-bold text-primary bg-amber-300 px-7 rounded-4xl border-1" : "hover:text-primary hover:bg-amber-300  border-1 bg-amber-200/30 px-7 rounded-4xl"
                   }
                 >
                   All Articles

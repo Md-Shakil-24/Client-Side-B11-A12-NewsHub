@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react"; 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -151,7 +151,6 @@ const Home = () => {
     ],
   };
 
-  // Handle click on breaking news article
   const handleBreakingNewsClick = (article) => {
     if (article.isPremium && !isPremiumUser) {
       Swal.fire({
@@ -173,14 +172,14 @@ const Home = () => {
 
   return (
     <div className="max-w-[1580px] mx-auto px-2 py-8">
-
       <Helmet>
         <title>Home | NewsHub</title>
         <meta name="description" content="Learn more about MyApp and what we do." />
         <meta property="og:title" content="About Us - MyApp" />
       </Helmet>
 
-      <div className="hero min-h-[60vh]  rounded-xl mb-12">
+      
+      <div className="hero  rounded-xl mb-12">
         <div className="hero-content text-center">
           <div className="max-w-2xl">
             <h1 className="text-5xl text-blue-600 font-bold">Stay Informed with NewsHub</h1>
@@ -191,6 +190,7 @@ const Home = () => {
         </div>
       </div>
 
+     
       {latestArticles.length > 0 && (
         <section className="mb-16">
           <div className="flex items-center mb-6">
@@ -198,7 +198,6 @@ const Home = () => {
             <h2 className="text-3xl text-blue-600  font-bold">BREAKING NEWS</h2>
             <div className="flex-1 ml-3 h-[2px] bg-gradient-to-r from-red-600 to-transparent"></div>
           </div>
-
           <div className="bg-red-50/20 p-4 mb-6 rounded-lg overflow-hidden">
             <div className="marquee-container">
               <div className="marquee-content">
@@ -210,7 +209,6 @@ const Home = () => {
               </div>
             </div>
           </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {latestArticles.slice(0, 2).map((article) => (
               <div
@@ -219,19 +217,13 @@ const Home = () => {
                 onClick={() => handleBreakingNewsClick(article)}
                 style={{ userSelect: "none" }}
               >
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
-                />
+                <img src={article.image} alt={article.title} className="w-full h-full object-cover"/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
                   <div>
                     <h3 className="text-white text-xl font-bold mt-1">{article.title}</h3>
                     <p className="text-gray-300 mt-2 line-clamp-2">{article.summary}</p>
                   </div>
                 </div>
-
-               
                 {article.isPremium && !isPremiumUser && (
                   <div
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -250,21 +242,11 @@ const Home = () => {
                       stroke="currentColor"
                       strokeWidth={2}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 11c.552 0 1 .448 1 1v2c0 .552-.448 1-1 1s-1-.448-1-1v-2c0-.552.448-1 1-1z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17 8V7a5 5 0 00-10 0v1H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-2z"
-                      />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c.552 0 1 .448 1 1v2c0 .552-.448 1-1 1s-1-.448-1-1v-2c0-.552.448-1 1-1z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8V7a5 5 0 00-10 0v1H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2h-2z"/>
                     </svg>
                   </div>
                 )}
-
-           
                 {latestArticles[0]._id === article._id && (
                   <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
                     LATEST
@@ -276,9 +258,10 @@ const Home = () => {
         </section>
       )}
 
+     
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">🔥 Trending Articles</h2>
-        <Slider {...sliderSettings} className="">
+        <Slider {...sliderSettings}>
           {trendingArticles.map(article => (
             <div key={article._id} className="px-2">
               <ArticleCard article={article} />
@@ -287,6 +270,7 @@ const Home = () => {
         </Slider>
       </section>
 
+      
       <section className="mb-16 ">
         <h2 className="text-3xl font-bold mb-8 text-center">📰 Our Publishers</h2>
         <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-5 gap-6">
@@ -296,9 +280,10 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="mb-16 pb-20  p-8 rounded-xl">
+     
+      <section className="mb-16 pb-20 p-8 rounded-xl">
         <h2 className="text-3xl text-blue-600 font-bold mb-8 text-center">📊 Platform Stats</h2>
-        <div className="grid grid-cols-1  md:grid-cols-3 gap-8 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
             <h3 className="text-4xl font-bold text-primary">
               <CountUp end={stats.total || 0} duration={2} />
@@ -326,7 +311,8 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="mb-16  py-8 rounded-xl">
+      {/* Key Features */}
+      <section className="mb-16 py-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-8 text-blue-600 text-center">✨ Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="card bg-white shadow-lg">
@@ -353,11 +339,12 @@ const Home = () => {
         </div>
       </section>
 
+      
       <section className="mb-16 rounded-xl">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="md:w-1/2">
             <img
-              src="https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+              src="https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
               alt="About NewsHub"
               className="rounded-lg shadow-xl w-full h-auto"
             />
@@ -379,6 +366,7 @@ const Home = () => {
         </div>
       </section>
 
+     
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">📦 Choose Your Plan</h2>
         <div className="grid md:grid-cols-3 gap-8">
@@ -428,6 +416,57 @@ const Home = () => {
         </Link>
       </div>
 
+     
+      <section className="mb-16 rounded-xl">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">💬 Testimonials</h2>
+        <div className=" grid md:grid-cols-2 gap-8">
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <p>"NewsHub keeps me updated with all the latest trends! The interface is super friendly."</p>
+            <h4 className="mt-4 font-bold">- Sarah L.</h4>
+          </div>
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <p>"The premium articles are insightful and well-written. Highly recommend the subscription."</p>
+            <h4 className="mt-4 font-bold">- David K.</h4>
+          </div>
+        </div>
+      </section>
+
+  
+      <section className=" mb-16 rounded-xl">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">✍️ Editorial Team</h2>
+        <div className=" items-center flex justify-center gap-10">
+          <div className="flex flex-col justify-center items-center">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Editor" className="w-32 h-32 rounded-full mx-auto"/>
+            <h3 className="mt-4 font-bold">James Carter</h3>
+            <p className="text-sm text-gray-500">Senior Editor</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Editor" className="w-32 h-32 rounded-full mx-auto"/>
+            <h3 className="mt-4 font-bold">Olivia Brown</h3>
+            <p className="text-sm text-gray-500">Content Manager</p>
+          </div>
+        </div>
+      </section>
+
+     
+      <section className=" rounded-xl">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">❓ Frequently Asked Questions</h2>
+        <div className="space-y-6">
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <h4 className="font-bold mb-2">How do I subscribe to premium content?</h4>
+            <p>Simply choose a Premium or Family plan above, and you will get access immediately after subscribing.</p>
+          </div>
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <h4 className="font-bold mb-2">Can I cancel my subscription?</h4>
+            <p>Yes, you can cancel anytime from your account settings. You will retain access until the end of your billing period.</p>
+          </div>
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <h4 className="font-bold mb-2">How are articles selected for my personalized feed?</h4>
+            <p>Our smart algorithm analyzes your reading habits and preferred topics to deliver news tailored specifically for you.</p>
+          </div>
+        </div>
+      </section>
+
       <SubscriptionModal showModal={showModal} setShowModal={setShowModal} />
 
       <style jsx>{`
@@ -438,7 +477,7 @@ const Home = () => {
         }
         .marquee-content {
           display: inline-block;
-          padding-left: 100%; /* Start off-screen to the right */
+          padding-left: 100%;
           animation: marquee 15s linear infinite;
         }
         .marquee-item {
