@@ -33,6 +33,7 @@ import AllArticlesAdmin from "../pages/AllArticleAdmin";
 import Category from "../pages/Category";
 import LearnMoreAbout from "../pages/LearnMoreAbout";
 import PublisherRequestForm from "../pages/RequestForm";
+
 // import PublisherRequest from "../pages/RequestPublisher";
 // import RequestPublisher from "../pages/RequestPublisher";
 
@@ -164,6 +165,7 @@ export const router = createBrowserRouter([
     { path: "add-publisher", element: <AddPublisher /> },
     {  path: "article-requests", element: <ArticleRequests /> },
     {  path: "all-articles", element: <AllArticlesAdmin /> },
+    {  path: "profile", element: <MyProfile/> }
   ],
 },
 

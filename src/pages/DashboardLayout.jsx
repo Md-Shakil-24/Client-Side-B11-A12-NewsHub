@@ -10,21 +10,19 @@ import {
   FaTimes,
   FaHome,
   FaClipboardList,
-  FaNewspaper as LogoIcon,
-  FaFileAlt,        
+  FaFileAlt,
 } from "react-icons/fa";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
-
+import ThemeToggle from "../component/ThemeToggle";
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-
+  // Fetch pending article count
   const { data: pendingArticleCount = 0 } = useQuery({
     queryKey: ["pending-article-requests-count"],
     queryFn: async () => {
@@ -33,17 +31,16 @@ const DashboardLayout = () => {
       );
       return res.data.count || 0;
     },
-    refetchInterval: 60000, 
+    refetchInterval: 60000,
   });
 
- 
+  // Fetch pending publisher count
   const { data: pendingPublisherCount = 0 } = useQuery({
     queryKey: ["pending-publisher-requests-count"],
     queryFn: async () => {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/admin/publisher-requests/count-pending`
       );
-
       return res.data.count || 0;
     },
     refetchInterval: 60000,
@@ -51,43 +48,23 @@ const DashboardLayout = () => {
 
   const navItems = [
     { name: "Overview", path: "/admin", icon: <FaChartPie /> },
+    { name: "Profile", path: "/admin/profile", icon: <FaUsers /> }, // Profile added
     { name: "All Users", path: "/admin/users", icon: <FaUsers /> },
-    {
-      name: "All Publishers",
-      path: "/admin/publishers",
-      icon: <FaNewspaper />,
-    },
-    {
-      name: "All Articles",          
-      path: "/admin/all-articles",
-      icon: <FaFileAlt />,
-    },
-    {
-      name: "Publisher Requests",
-      path: "/admin/publisher-requests",
-      icon: <FaCheckSquare />,
-      badgeCount: pendingPublisherCount,
-    },
+    { name: "All Publishers", path: "/admin/publishers", icon: <FaNewspaper /> },
+    { name: "All Articles", path: "/admin/all-articles", icon: <FaFileAlt /> },
+    { name: "Publisher Requests", path: "/admin/publisher-requests", icon: <FaCheckSquare />, badgeCount: pendingPublisherCount },
     { name: "Add Publisher", path: "/admin/add-publisher", icon: <FaPlus /> },
-    {
-      name: "Article Requests",
-      path: "/admin/article-requests",
-      icon: <FaClipboardList />,
-      badgeCount: pendingArticleCount,
-    },
+    { name: "Article Requests", path: "/admin/article-requests", icon: <FaClipboardList />, badgeCount: pendingArticleCount },
   ];
 
   const SidebarContent = () => (
     <div className="h-full w-72 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-700 text-white shadow-2xl backdrop-blur-md p-6 flex flex-col">
-    
       <div className="flex-1 overflow-y-auto">
-      
         <div className="flex items-center gap-3 mb-10">
-          <LogoIcon className="text-3xl text-white animate-bounce" />
+          <FaNewspaper className="text-3xl text-white animate-bounce" />
           <h2 className="text-2xl font-bold tracking-wide">NewsHub Admin</h2>
         </div>
 
-       
         <ul className="space-y-3">
           {navItems.map((item) => (
             <li key={item.path} className="relative">
@@ -108,8 +85,6 @@ const DashboardLayout = () => {
                 <span className="font-medium transition-colors duration-300 group-hover:text-white whitespace-nowrap">
                   {item.name}
                 </span>
-
-               
                 {item.badgeCount > 0 && (
                   <span className="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold leading-none text-red-100 bg-red-600 rounded-full whitespace-nowrap">
                     {item.badgeCount}
@@ -121,7 +96,6 @@ const DashboardLayout = () => {
         </ul>
       </div>
 
-     
       <div className="pt-6 mt-auto">
         <button
           onClick={() => navigate("/")}
@@ -130,8 +104,6 @@ const DashboardLayout = () => {
           <FaHome className="text-xl animate-pulse" />
           <span className="font-semibold whitespace-nowrap">Back to Home</span>
         </button>
-
-        
 
         <p className="text-xs text-slate-100 mt-6 text-center">
           © {new Date().getFullYear()} NewsHub
@@ -142,17 +114,15 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-
       <Helmet>
-        <title>OverView | admin | NewsHub</title>
-        <meta name="description" content="Create an account for NewsHub." />
+        <title>OverView | Admin | NewsHub</title>
+        <meta name="description" content="Admin dashboard for NewsHub" />
       </Helmet>
-    
+
       <aside className="hidden lg:block fixed top-0 left-0 h-full z-40">
         <SidebarContent />
       </aside>
 
-  
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={toggleSidebar}
@@ -163,7 +133,6 @@ const DashboardLayout = () => {
         </button>
       </div>
 
-    
       {isSidebarOpen && (
         <div className="lg:hidden fixed top-0 left-0 w-72 h-full z-50">
           <div className="relative h-full">
@@ -179,7 +148,6 @@ const DashboardLayout = () => {
         </div>
       )}
 
-    
       <main className="flex-1 lg:ml-72 p-6 w-full overflow-y-auto min-h-screen">
         <Outlet />
       </main>
