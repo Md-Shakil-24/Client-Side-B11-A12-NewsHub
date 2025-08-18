@@ -145,7 +145,7 @@ const Nav = () => {
 
   return (
     <nav
-      className={`bg-base-100/70 backdrop-blur-md sticky top-0 z-50 shadow-md transition-transform duration-300 ${
+      className={`bg-base-100/10 backdrop-blur-md sticky top-0 z-50 shadow-md transition-transform duration-300 ${
         showNav ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -171,7 +171,7 @@ const Nav = () => {
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
-                    isActive ? "font-bold text-primary" : "hover:text-primary"
+                    isActive ? "font-bold text-primary bg-amber-300 border-1 px-10 rounded-4xl" : "hover:text-primary border-1 bg-amber-200/30 px-10 hover:bg-amber-300 rounded-4xl"
                   }
                 >
                   Home
@@ -181,7 +181,7 @@ const Nav = () => {
                 <NavLink
                   to="/all-articles"
                   className={({ isActive }) =>
-                    isActive ? "font-bold text-primary" : "hover:text-primary"
+                    isActive ? "font-bold text-primary bg-amber-300 px-10 rounded-4xl border-1" : "hover:text-primary hover:bg-amber-300  border-1 bg-amber-200/30 px-10 rounded-4xl"
                   }
                 >
                   All Articles
@@ -191,7 +191,7 @@ const Nav = () => {
               {user && (
                 <li className="relative">
                   <button
-                    className="btn btn-ghost flex items-center mt-[-4px] gap-1"
+                    className=" bg-amber-200/30 hover:bg-amber-300 rounded-4xl px-6 border-1 flex items-center  gap-1"
                     onClick={() => setMoreOpen(!moreOpen)}
                   >
                     More

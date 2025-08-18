@@ -180,11 +180,11 @@ const Home = () => {
         <meta property="og:title" content="About Us - MyApp" />
       </Helmet>
 
-      <div className="hero min-h-[60vh] bg-base-200 rounded-xl mb-12">
+      <div className="hero min-h-[60vh]  rounded-xl mb-12">
         <div className="hero-content text-center">
           <div className="max-w-2xl">
-            <h1 className="text-5xl font-bold">Stay Informed with NewsHub</h1>
-            <p className="py-6">
+            <h1 className="text-5xl text-blue-600 font-bold">Stay Informed with NewsHub</h1>
+            <p className="text-blue-600  py-6">
               Breaking news, trusted publishers, and powerful features at your fingertips.
             </p>
           </div>
@@ -195,11 +195,11 @@ const Home = () => {
         <section className="mb-16">
           <div className="flex items-center mb-6">
             <div className="w-4 h-8 bg-red-600 rounded mr-3"></div>
-            <h2 className="text-3xl font-bold">BREAKING NEWS</h2>
+            <h2 className="text-3xl text-blue-600  font-bold">BREAKING NEWS</h2>
             <div className="flex-1 ml-3 h-[2px] bg-gradient-to-r from-red-600 to-transparent"></div>
           </div>
 
-          <div className="bg-red-50 p-4 mb-6 rounded-lg overflow-hidden">
+          <div className="bg-red-50/20 p-4 mb-6 rounded-lg overflow-hidden">
             <div className="marquee-container">
               <div className="marquee-content">
                 {latestArticles.map((article, index) => (
@@ -278,7 +278,7 @@ const Home = () => {
 
       <section className="mb-16">
         <h2 className="text-3xl font-bold mb-8 text-center">🔥 Trending Articles</h2>
-        <Slider {...sliderSettings} className="px-4">
+        <Slider {...sliderSettings} className="">
           {trendingArticles.map(article => (
             <div key={article._id} className="px-2">
               <ArticleCard article={article} />
@@ -296,38 +296,38 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="mb-16 pb-20 bg-base-200 p-8 rounded-xl">
-        <h2 className="text-3xl font-bold mb-8 text-center">📊 Platform Stats</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <section className="mb-16 pb-20  p-8 rounded-xl">
+        <h2 className="text-3xl text-blue-600 font-bold mb-8 text-center">📊 Platform Stats</h2>
+        <div className="grid grid-cols-1  md:grid-cols-3 gap-8 text-center">
           <div>
             <h3 className="text-4xl font-bold text-primary">
               <CountUp end={stats.total || 0} duration={2} />
             </h3>
-            <p>Total Users</p>
+            <p className="text-blue-600"> Total Users</p>
           </div>
           <div>
             <h3 className="text-4xl font-bold text-secondary">
               <CountUp end={stats.normal || 0} duration={2} />
             </h3>
-            <p>Regular Users</p>
+            <p className="text-blue-600">Regular Users</p>
           </div>
           <div>
             <h3 className="text-4xl font-bold text-accent">
               <CountUp end={stats.premium || 0} duration={2} />
             </h3>
-            <p>Premium Users</p>
+            <p className="text-blue-600">Premium Users</p>
           </div>
         </div>
         <div className="mt-8 max-w-md mx-auto" style={{ height: '400px' }}>
           <Pie data={publisherData} options={pieOptions} />
-          <p className="text-center mt-4 ml-[-100px]  text-sm text-gray-500">
+          <p className="text-center text-blue-600 mt-4 ml-[-100px]  text-sm font-bold">
             Each slice represents one publisher (total: {publishers.length})
           </p>
         </div>
       </section>
 
-      <section className="mb-16 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl">
-        <h2 className="text-3xl font-bold mb-8 text-center">✨ Key Features</h2>
+      <section className="mb-16  py-8 rounded-xl">
+        <h2 className="text-3xl font-bold mb-8 text-blue-600 text-center">✨ Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="card bg-white shadow-lg">
             <div className="card-body items-center text-center">
@@ -353,7 +353,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="mb-16 bg-base-200 p-8 rounded-xl">
+      <section className="mb-16 rounded-xl">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="md:w-1/2">
             <img
@@ -363,12 +363,12 @@ const Home = () => {
             />
           </div>
           <div className="md:w-1/2">
-            <h2 className="text-3xl font-bold mb-4">About NewsHub</h2>
-            <p className="mb-4">
+            <h2 className="text-3xl text-blue-600 font-bold mb-4">About NewsHub</h2>
+            <p className="text-blue-600 font-semibold mb-4">
               NewsHub is a revolutionary platform that brings you the latest news from trusted sources around the world.
               Our mission is to deliver accurate, timely, and diverse news coverage to keep you informed.
             </p>
-            <p className="mb-6">
+            <p className="text-blue-600 mb-6">
               Founded in 2023, we've grown to become one of the most comprehensive news aggregators,
               partnering with over 50 publishers across various industries.
             </p>
