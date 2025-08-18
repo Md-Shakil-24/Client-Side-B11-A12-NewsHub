@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const LearnMoreAbout = () => {
   return (
-    <div className="min-h-screen bg-base-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen  py-12 px-4">
 
  <Helmet>
               <title>About | NewsHub</title>
@@ -13,17 +13,17 @@ const LearnMoreAbout = () => {
 
 
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1580px] mx-auto">
        
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-primary mb-4">About NewsHub</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold text-blue-600 mb-4">About NewsHub</h1>
+          <p className="text-xl text-blue-600 max-w-3xl mx-auto">
             Your trusted source for breaking news, in-depth analysis, and diverse perspectives from around the world.
           </p>
         </div>
 
        
-        <div className="bg-base-200 rounded-xl p-8 mb-16">
+        <div className="rounded-xl  mb-16">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
               <img
@@ -33,11 +33,11 @@ const LearnMoreAbout = () => {
               />
             </div>
             <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
-              <p className="mb-4 text-lg">
+              <h2 className="text-3xl font-bold text-blue-600 mb-4">Our Mission</h2>
+              <p className="mb-4 text-blue-600 text-lg">
                 At NewsHub, we believe in the power of information to transform lives and societies. Our mission is to deliver accurate, timely, and diverse news coverage that keeps you informed and empowered.
               </p>
-              <p className="text-lg">
+              <p className="text-lg text-blue-600">
                 We strive to cut through the noise and provide journalism that matters - stories that inform, educate, and inspire action.
               </p>
             </div>
@@ -46,8 +46,8 @@ const LearnMoreAbout = () => {
 
        
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Core Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <h2 className="text-3xl text-blue-600 font-bold text-center mb-12">Our Core Values</h2>
+          <div className="grid grid-cols-1  md:grid-cols-3 gap-8">
             {[
               {
                 icon: "🔍",
@@ -77,9 +77,9 @@ const LearnMoreAbout = () => {
         </div>
 
       
-        <div className="mb-16 bg-base-200 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-center mb-8">Our Publishing Process</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="mb-16 rounded-xl py-8 ">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">Our Publishing Process</h2>
+          <div className="grid grid-cols-1 text-blue-600 md:grid-cols-4 gap-6">
             {[
               {
                 step: "1",
@@ -107,7 +107,7 @@ const LearnMoreAbout = () => {
                   {process.step}
                 </div>
                 <h3 className="text-xl font-bold mb-2">{process.title}</h3>
-                <p className="text-gray-600">{process.description}</p>
+                <p className=" text-blue-600">{process.description}</p>
               </div>
             ))}
           </div>
@@ -115,8 +115,8 @@ const LearnMoreAbout = () => {
 
       
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Global Coverage</h2>
-          <div className="bg-base-100 rounded-xl shadow-lg p-6">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">Global Coverage</h2>
+          <div className=" rounded-xl py-6">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2">
                 <img
@@ -126,21 +126,21 @@ const LearnMoreAbout = () => {
                 />
               </div>
               <div className="md:w-1/2">
-                <p className="mb-4 text-lg">
+                <p className="mb-4 text-blue-600 text-lg">
                   With correspondents in over 30 countries, we bring you stories from every corner of the globe. Our international network ensures you get local perspectives on global events.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-start">
-                    <span className="mr-2">🌐</span>
-                    <span>24/7 news coverage across all time zones</span>
+                    <span className="mr-2 text-blue-600">🌐</span>
+                    <span className="text-blue-600">24/7 news coverage across all time zones</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="mr-2">🗣️</span>
-                    <span>Multilingual reporting team</span>
+                    <span className="mr-2 text-blue-600">🗣️</span>
+                    <span className="text-blue-600">Multilingual reporting team</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="mr-2">📡</span>
-                    <span>Real-time updates from major world events</span>
+                    <span className="mr-2 text-blue-600">📡</span>
+                    <span className="text-blue-600">Real-time updates from major world events</span>
                   </li>
                 </ul>
               </div>
@@ -150,7 +150,7 @@ const LearnMoreAbout = () => {
 
     
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Story</h2>
+          <h2 className="text-3xl font-bold text-blue-600 text-center mb-12">Our Story</h2>
           <div className="relative">
     
             <div className="absolute left-1/2 h-full w-1 bg-primary transform -translate-x-1/2 hidden md:block"></div>
@@ -207,8 +207,8 @@ const LearnMoreAbout = () => {
         </div>
 
      
-        <div className="mb-16 bg-base-200 rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-center mb-8">Awards & Recognition</h2>
+        <div className="mb-16  rounded-xl p-8">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">Awards & Recognition</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
