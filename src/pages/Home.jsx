@@ -198,7 +198,7 @@ const Home = () => {
             <h2 className="text-3xl text-blue-600  font-bold">BREAKING NEWS</h2>
             <div className="flex-1 ml-3 h-[2px] bg-gradient-to-r from-red-600 to-transparent"></div>
           </div>
-          <div className="bg-red-50/20 p-4 mb-6 rounded-lg overflow-hidden">
+          <div className="bg-green-200/50 p-4 mb-6 rounded-lg overflow-hidden">
             <div className="marquee-container">
               <div className="marquee-content">
                 {latestArticles.map((article, index) => (
