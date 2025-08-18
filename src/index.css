@@ -5,42 +5,44 @@
 @tailwind components;
 @tailwind utilities;
 
-html.dark {
-  background-color: #1f2937; /* optional for full page background */
+
+body {
+  @apply bg-fixed bg-center bg-cover;
+  background-image: url("https://i.ibb.co.com/pvB4hNDg/istockphoto-1763793523-612x612.jpg");
 }
 
 
-.active{
-    color: blue;
+html.dark body {
+  background-image: url("https://i.ibb.co.com/x7sXwQ3/news-dark-bg.jpg");
+  background-color: #1f2937; 
 }
 
-.body{
-  background-color: aqua;
-}
 
+.active {
+  color: blue;
+}
 
 
 @keyframes waveDance {
   0%, 100% {
     transform: translateY(0) rotate(0deg);
-    color: #3b82f6; /* blue */
+    color: #3b82f6; 
   }
   25% {
     transform: translateY(-8px) rotate(-5deg);
-    color: #ec4899; /* pink */
+    color: #ec4899; 
   }
   50% {
     transform: translateY(0) rotate(0deg);
-    color: #10b981; /* green */
+    color: #10b981; 
   }
   75% {
     transform: translateY(8px) rotate(5deg);
-    color: #f59e0b; /* amber */
+    color: #f59e0b; 
   }
 }
 
 .wave-letter {
   display: inline-block;
   animation: waveDance 3s infinite;
-  -webkit-animation: waveDance 3s infinite;
 }
